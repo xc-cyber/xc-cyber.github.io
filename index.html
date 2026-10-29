@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>拉面粉 · 个人主页</title>
+<meta name="description" content="拉面粉的个人主页 —— 在校学生，用 Java 和面向对象方法把课程作业做成真正能跑的项目。">
+<style>
+  :root {
+    --bg: #0b0f14;
+    --bg-soft: #0f151c;
+    --card: #141b23;
+    --border: #222c38;
+    --text: #e6edf3;
+    --muted: #94a3b8;
+    --dim: #64748b;
+    --accent: #4f9cf9;
+    --accent-soft: rgba(79, 156, 249, 0.12);
+    --radius: 14px;
+    --max: 960px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+            "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC",
+            Roboto, Helvetica, Arial, sans-serif;
+    --mono: "SF Mono", "JetBrains Mono", Consolas, "Courier New", monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 背景微光 */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(900px 500px at 15% -10%, rgba(79, 156, 249, 0.14), transparent 70%),
+      radial-gradient(700px 400px at 90% 5%, rgba(139, 92, 246, 0.10), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- 顶部导航 ---------- */
+  header.nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(14px);
+    background: rgba(11, 15, 20, 0.72);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-inner {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .brand {
+    font-weight: 650;
+    letter-spacing: 0.5px;
+    font-size: 15px;
+  }
+
+  .brand span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 22px;
+    font-size: 14px;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.18s ease;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding: 88px 0 64px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid rgba(79, 156, 249, 0.25);
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 22px;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #3ddc97;
+    box-shadow: 0 0 0 3px rgba(61, 220, 151, 0.15);
+  }
+
+  h1 {
+    font-size: clamp(34px, 6vw, 52px);
+    line-height: 1.2;
+    margin: 0 0 18px;
+    letter-spacing: -0.5px;
+    font-weight: 700;
+  }
+
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(100deg, #4f9cf9, #8b5cf6 60%, #38bdf8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .lede {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 620px;
+    margin: 0 0 30px;
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-size: 14.5px;
+    font-weight: 550;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    background: var(--card);
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .btn:hover { transform: translateY(-1px); border-color: #33404f; }
+
+  .btn.primary {
+    background: linear-gradient(180deg, #4f9cf9, #2f7fe0);
+    border-color: transparent;
+    color: #06111f;
+  }
+
+  .btn.primary:hover { background: linear-gradient(180deg, #62aafd, #3a8bea); }
+
+  /* ---------- 区块 ---------- */
+  section {
+    padding: 56px 0;
+    border-top: 1px solid rgba(34, 44, 56, 0.7);
+  }
+
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 26px;
+  }
+
+  .sec-head h2 {
+    font-size: 22px;
+    margin: 0;
+    letter-spacing: -0.2px;
+    font-weight: 650;
+  }
+
+  .sec-head .num {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    opacity: 0.85;
+  }
+
+  p { margin: 0 0 16px; color: #cbd5e1; }
+
+  .muted { color: var(--muted); }
+
+  /* ---------- 技术栈 ---------- */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .tag {
+    font-size: 13.5px;
+    padding: 7px 14px;
+    border-radius: 9px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: #cbd5e1;
+  }
+
+  .tag b { color: var(--text); font-weight: 600; }
+
+  /* ---------- 项目卡片 ---------- */
+  .project {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .project-body { padding: 28px 28px 24px; }
+
+  .project h3 {
+    font-size: 19px;
+    margin: 0 0 6px;
+    font-weight: 650;
+  }
+
+  .project .sub {
+    font-size: 13.5px;
+    color: var(--dim);
+    margin-bottom: 16px;
+    font-family: var(--mono);
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 14px;
+    margin: 22px 0 20px;
+    padding: 18px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .fact .k {
+    font-size: 12px;
+    color: var(--dim);
+    margin-bottom: 3px;
+  }
+
+  .fact .v {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .fact .v small { font-size: 12px; color: var(--muted); font-weight: 400; }
+
+  ul.feat {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 22px;
+    display: grid;
+    gap: 9px;
+  }
+
+  ul.feat li {
+    position: relative;
+    padding-left: 22px;
+    font-size: 14.5px;
+    color: #cbd5e1;
+  }
+
+  ul.feat li::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 11px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .shot {
+    background: #0a0e13;
+    border-top: 1px solid var(--border);
+    padding: 18px;
+    text-align: center;
+  }
+
+  .shot img {
+    max-width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: block;
+    margin: 0 auto;
+  }
+
+  .shot figcaption {
+    font-size: 12.5px;
+    color: var(--dim);
+    margin-top: 12px;
+  }
+
+  /* ---------- UML 双图 ---------- */
+  .uml {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 18px;
+  }
+
+  .figure {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin: 0;
+  }
+
+  .figure .canvas {
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .figure img { max-width: 100%; height: auto; display: block; }
+
+  .figure figcaption {
+    font-size: 12.5px;
+    color: var(--dim);
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  /* ---------- 时间线 ---------- */
+  .timeline { display: grid; gap: 18px; }
+
+  .item {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+
+  .item .when {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--dim);
+    padding-top: 3px;
+  }
+
+  .item .what { font-size: 14.5px; color: #cbd5e1; }
+
+  .item .what b { color: var(--text); font-weight: 600; }
+
+  /* ---------- 页脚 ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 34px 0 56px;
+    font-size: 13.5px;
+    color: var(--dim);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+  }
+
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  @media (max-width: 720px) {
+    .hero { padding: 60px 0 44px; }
+    .nav-links { display: none; }
+    .uml { grid-template-columns: 1fr; }
+    .project-body { padding: 22px; }
+    .item { grid-template-columns: 1fr; gap: 4px; }
+    footer { flex-direction: column; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .btn:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand">拉面粉<span>.</span></div>
+    <nav class="nav-links">
+      <a href="#about">关于</a>
+      <a href="#stack">技术栈</a>
+      <a href="#work">项目</a>
+      <a href="#now">近况</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="eyebrow"><span class="dot"></span> 在校学生 · 正在学习 Java 与面向对象</div>
+    <h1>你好，我是<em>拉面粉</em></h1>
+    <p class="lede">
+      喜欢把课堂作业做成真正能跑起来的项目 —— 不只是交一份代码，
+      而是把需求、建模、实现、测试走一遍完整的流程。
+    </p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/xc-cyber/wuhan-metro-simulator" target="_blank" rel="noopener">
+        查看代表作 → 
+      </a>
+      <a class="btn" href="https://github.com/xc-cyber" target="_blank" rel="noopener">GitHub 主页</a>
+    </div>
+  </div>
+
+  <!-- 关于 -->
+  <section id="about">
+    <div class="sec-head"><span class="num">01</span><h2>关于我</h2></div>
+    <p>
+      目前在校学习计算机相关课程，主要精力放在 Java 与面向对象程序设计上。
+      我相信一句话：<b>能跑起来的代码才是好代码</b> —— 所以每学一个新概念，
+      我都会想办法把它塞进一个可以运行的小程序里，而不是停在纸面上。
+    </p>
+    <p class="muted">
+      对 Web 前端与小程序也有兴趣，正在慢慢摸索。遇到问题习惯自己先查、先试、先拆开看，
+      实在卡住了再去问。
+    </p>
+  </section>
+
+  <!-- 技术栈 -->
+  <section id="stack">
+    <div class="sec-head"><span class="num">02</span><h2>技术栈</h2></div>
+    <div class="tags">
+      <span class="tag"><b>Java</b> · 面向对象 / 集合 / 异常</span>
+      <span class="tag"><b>Java Swing</b> · 桌面界面</span>
+      <span class="tag"><b>算法</b> · Dijkstra / DFS / 动态规划</span>
+      <span class="tag"><b>UML</b> · 类图 / 用例图</span>
+      <span class="tag"><b>HTML/CSS/JS</b> · 入门</span>
+      <span class="tag"><b>Git</b> · 版本管理 / GitHub Actions</span>
+      <span class="tag"><b>工具</b> · VS Code / IntelliJ IDEA</span>
+    </div>
+  </section>
+
+  <!-- 项目 -->
+  <section id="work">
+    <div class="sec-head"><span class="num">03</span><h2>代表项目</h2></div>
+
+    <div class="project">
+      <div class="project-body">
+        <h3>武汉地铁模拟系统</h3>
+        <div class="sub">Java 8 · Swing · Dijkstra · 面向对象课程大作业</div>
+        <p>
+          基于真实武汉地铁线网数据的查询系统。支持最短路径检索、全部无环路径枚举、
+          换乘方案生成与分段计价，并配有图形界面和完整的 UML 建模文档。
+        </p>
+
+        <div class="facts">
+          <div class="fact"><div class="k">线路</div><div class="v">12 <small>条</small></div></div>
+          <div class="fact"><div class="k">站点</div><div class="v">250 <small>个</small></div></div>
+          <div class="fact"><div class="k">换乘站</div><div class="v">33 <small>个</small></div></div>
+          <div class="fact"><div class="k">核心类</div><div class="v">14 <small>个</small></div></div>
+        </div>
+
+        <ul class="feat">
+          <li><b>最短路径</b>：Dijkstra 优先队列实现，按实际里程加权</li>
+          <li><b>全部路径</b>：DFS 回溯枚举无环路径，站点序列指纹去重</li>
+          <li><b>换乘方案</b>：动态规划求换乘次数最少的线路组合</li>
+          <li><b>附近站点</b>：Dijkstra 变体按真实距离筛选 n 公里内站点</li>
+          <li><b>分段计价</b>：按里程阶梯计费，支持单程票 / 武汉通 / 日票</li>
+          <li><b>工程设计</b>：三层结构分层解耦，界面层不含业务逻辑</li>
+        </ul>
+
+        <div class="cta">
+          <a class="btn primary" href="https://github.com/xc-cyber/wuhan-metro-simulator" target="_blank" rel="noopener">源码</a>
+          <a class="btn" href="https://github.com/xc-cyber/wuhan-metro-simulator/blob/main/docs/report.pdf" target="_blank" rel="noopener">设计报告 PDF</a>
+        </div>
+      </div>
+
+      <figure class="shot">
+        <img src="assets/gui.png" alt="武汉地铁模拟系统图形界面截图" loading="lazy">
+        <figcaption>Java Swing 图形界面 —— 查询最短路径、全部路径与中转站</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- UML -->
+  <section>
+    <div class="sec-head"><span class="num">04</span><h2>UML 建模</h2></div>
+    <p class="muted" style="margin-bottom:22px;">
+      动手写代码之前先把结构画清楚：谁负责数据、谁负责算法、谁负责输出。
+    </p>
+    <div class="uml">
+      <figure class="figure">
+        <div class="canvas"><img src="assets/class-diagram.png" alt="类图" loading="lazy"></div>
+        <figcaption>类图 —— 实体、网络、算法与控制类的职责划分</figcaption>
+      </figure>
+      <figure class="figure">
+        <div class="canvas"><img src="assets/use-case.png" alt="用例图" loading="lazy"></div>
+        <figcaption>用例图 —— 乘客视角的七项功能</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 近况 -->
+  <section id="now">
+    <div class="sec-head"><span class="num">05</span><h2>最近在做</h2></div>
+    <div class="timeline">
+      <div class="item">
+        <div class="when">进行中</div>
+        <div class="what"><b>完善地铁模拟系统</b>：优化图形界面的交互细节，补充更多边界情况的测试。</div>
+      </div>
+      <div class="item">
+        <div class="when">学习中</div>
+        <div class="what"><b>Web 前端</b>：HTML / CSS / JavaScript 基础，计划做一个课程项目练手。</div>
+      </div>
+      <div class="item">
+        <div class="when">已完成</div>
+        <div class="what"><b>工程化实践</b>：为项目配置 GitHub Actions，每次推送自动编译并运行回归测试。</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>© 2026 拉面粉 · 用 HTML 与 CSS 手写，托管于 GitHub Pages</div>
+    <div><a href="https://github.com/xc-cyber" target="_blank" rel="noopener">github.com/xc-cyber</a></div>
+  </footer>
+
+</main>
+
+</body>
+</html>
